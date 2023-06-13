@@ -5,12 +5,12 @@ and computation overhead, effectively preserving the benefits of low-precision a
 
 
 The current release supports following features:
-* Implementation of the OWQ algorithm: `recon.py`
-* 3/4-bit weight quantization of OPT, LLaMA, and BLOOM families: `opt.py`, `llama.py`, `bloom.py`
-* Evaluating the perplexity of quantized models: `opt.py`, `llama.py`, `bloom.py`
-* Evaluating the zero-shot accuracy of quantized models: `zeroshot.py`
+* Implementation of the OWQ algorithm: [recon.py](https://github.com/xvyaward/owq/blob/main/owq/recon.py)
+* 3/4-bit weight quantization of OPT, LLaMA, and BLOOM families: [opt.py](https://github.com/xvyaward/owq/blob/main/opt.py), [llama.py](https://github.com/xvyaward/owq/blob/main/llama.py), [bloom.py](https://github.com/xvyaward/owq/blob/main/bloom.py)
+* Evaluating the perplexity of quantized models: [opt.py](https://github.com/xvyaward/owq/blob/main/opt.py), [llama.py](https://github.com/xvyaward/owq/blob/main/llama.py), [bloom.py](https://github.com/xvyaward/owq/blob/main/bloom.py)
+* Evaluating the zero-shot accuracy of quantized models: [zeroshot.py](https://github.com/xvyaward/owq/blob/main/zeroshot.py)
 * Supports 3-bit packed weight save / load (~1/5 file size of FP16 checkpoint)
-* Efficient 3-bit matrix - FP16 vector product CUDA kernel for OWQ: `owq/kernel`
+* Efficient 3-bit matrix - FP16 vector product CUDA kernel for OWQ: [owq/kernel](https://github.com/xvyaward/owq/tree/main/owq/kernel)
 
 
 Features we are working on:
