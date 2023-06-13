@@ -1,0 +1,11 @@
+torch==2.0.0
+transformers
+datasets
+sacrebleu
+sqlitedict
+scikit-learn
+omegaconf
+pycountry
+rouge_score
+pytablewriter
+sentencepiece
