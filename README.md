@@ -80,7 +80,7 @@ python opt.py facebook/opt-1.3b c4 --wbits 3 --target_bit 3.01
 ```
 python opt.py facebook/opt-1.3b c4 --wbits 4 --target_bit 4.01
 ```
-For more examples with packed weights save / load, please refer to `scripts/`.
+Please refer to `scripts/` for more examples.
 
 Below are the example for the other options (FP16, RTN, GPTQ). 
 ```
