@@ -106,10 +106,10 @@ python llama.py {llama-model-location} c4 --wbits 3 --target_bit 3.01
 ### BLOOM
 * OWQ using 3.01-bit (3-bit quantization + few FP16 weight columns)
 ```
-python bloom.py bigscience/bloom-560m c4 --wbits 3 --target_bit 3.01
+python bloom.py bigscience/bloom-1b1 c4 --wbits 3 --target_bit 3.01
 ```
 
-To run other BLOOM models replace `bloom-560m` with one of: `bloom-1b1`, `bloom-1b7`, `bloom-3b`, `bloom-7b1`, `bloom`.
+To run other BLOOM models replace `bloom-1b1` with one of: `bloom-560m`, `bloom-1b7`, `bloom-3b`, `bloom-7b1`, `bloom`.
 
 
 ## Zero-shot
