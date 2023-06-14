@@ -22,3 +22,6 @@ for task in 'lambada_openai' 'piqa' 'arc_challenge,arc_easy'; do
     CUDA_VISIBLE_DEVICES=$dev python zeroshot.py facebook/opt-$model --load $checkpoint --batch_size 1 --tasks $task --logfile $logfile
 done
 # rm $checkpoint
+
+### example usage
+# sh opt_end_to_end_evaluation.sh 0 1.3b
