@@ -136,7 +136,7 @@ python test_kernel.py
 
 ### Benchmark language generation with 3-bit packed model (opt, llama)
 ```
-# Example of OPT-65b language generation (single token)
+# Example of OPT-66b language generation (single token)
 
 # Save compressed model
 python opt.py facebook/opt-66b c4 --wbits 3 --target_bit 3.01 --no-eval --save {checkpoint-file} --packing
