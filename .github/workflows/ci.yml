@@ -11,14 +11,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Copy ./ to ./temp using rsync (to exclude README.md)
-        run: apk add rsync && rsync -arv --exclude="README.md" ./ ./temp/
+      - name: rm README.md (to exclude README.md)
+        run: rm README.md
       - name: Pushes to another repository
         uses: cpina/github-action-push-to-another-repository@main
         env:
           SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
         with:
-          source-directory: './temp/'
+          source-directory: './'
           destination-github-username: 'ECoLab-POSTECH'
           destination-repository-name: 'OWQ'
           user-email: ckdgnsrhkspd@naver.com
