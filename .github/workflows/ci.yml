@@ -11,14 +11,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: modify README.md
-        run: sed '2 i\ \n### Currently our original code is available at [xvyaward/owq](https://github.com/xvyaward/owq).\n' README.md -i
+      - name: Copy ./ to ./temp using rsync (to exclude README.md)
+        run: apk add rsync && rsync -arv --exclude="README.md" ./ ./temp/
       - name: Pushes to another repository
         uses: cpina/github-action-push-to-another-repository@main
         env:
           SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
         with:
-          source-directory: './'
+          source-directory: './temp/'
           destination-github-username: 'ECoLab-POSTECH'
           destination-repository-name: 'OWQ'
           user-email: ckdgnsrhkspd@naver.com
