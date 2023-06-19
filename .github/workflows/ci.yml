@@ -11,8 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: rm README.md (to exclude README.md)
-        run: rm README.md
+      - name: modify README file
+        run: sed '2 i\ \n### Currently our original code is available at [xvyaward/owq](https://github.com/xvyaward/owq).\n' README.md -i
       - name: Pushes to another repository
         uses: cpina/github-action-push-to-another-repository@main
         env:
