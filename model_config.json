@@ -1,0 +1,97 @@
+{
+"opt":{
+    "map_layer":{"q":"self_attn.q_proj","k":"self_attn.k_proj","v":"self_attn.v_proj","out":"self_attn.out_proj","fc1":"fc1","fc2":"fc2"}, 
+    "ratios":{"self_attn.q_proj":1,"self_attn.k_proj":1,"self_attn.v_proj":1,"self_attn.out_proj":1,"fc1":0.25,"fc2":0.25},
+    "sequential":[
+        ["self_attn.q_proj", "self_attn.k_proj", "self_attn.v_proj"],
+        ["self_attn.out_proj"],
+        ["fc1"],
+        ["fc2"]
+        ],
+    "ln_layers":[
+        "self_attn_layer_norm",
+        "final_layer_norm"
+        ],
+    "layers":"model.model.decoder.layers",
+    "prefix":"model.decoder.layers",
+    "pre_layers":[
+        "model.model.decoder.embed_tokens",
+        "model.model.decoder.embed_positions"
+        ],
+    "post_layers":[],
+    "inp_kwargs":[
+        "attention_mask"
+        ]
+    },
+"llama":{
+    "map_layer":{"q":"self_attn.q_proj","k":"self_attn.k_proj","v":"self_attn.v_proj","o":"self_attn.o_proj","up":"mlp.up_proj","gate":"mlp.gate_proj","down":"mlp.down_proj"}, 
+    "ratios":{"self_attn.q_proj":1,"self_attn.k_proj":1,"self_attn.v_proj":1,"self_attn.o_proj":1,"mlp.up_proj":0.375,"mlp.gate_proj":0.375,"mlp.down_proj":0.375},
+    "sequential":[
+        ["self_attn.q_proj", "self_attn.k_proj", "self_attn.v_proj"],
+        ["self_attn.o_proj"],
+        ["mlp.up_proj", "mlp.gate_proj"],
+        ["mlp.down_proj"]
+        ],
+    "ln_layers":[
+        "input_layernorm",
+        "post_attention_layernorm"
+        ],
+    "layers":"model.model.layers",
+    "prefix":"model.layers",
+    "pre_layers":[
+        "model.model.embed_tokens"
+        ],
+    "post_layers":[
+        "model.model.norm"
+        ],
+    "inp_kwargs":[
+        "attention_mask",
+        "position_ids"
+        ]
+    },
+"bloom":{
+    "map_layer":{"qkv":"self_attention.query_key_value","dense":"self_attention.dense","fc1":"mlp.dense_h_to_4h","fc2":"mlp.dense_4h_to_h"}, 
+    "ratios":{"self_attention.query_key_value":1,"self_attention.dense":1,"mlp.dense_h_to_4h":0.25,"mlp.dense_4h_to_h":0.25},
+    "sequential":[
+        ["self_attention.query_key_value"],
+        ["self_attention.dense"],
+        ["mlp.dense_h_to_4h"],
+        ["mlp.dense_4h_to_h"]
+        ],
+    "layers":"model.transformer.h",
+    "prefix":"transformer.h",
+    "pre_layers":[
+        "model.transformer.word_embeddings",
+        "model.transformer.word_embeddings_layernorm"
+        ],
+    "post_layers":[
+        "model.transformer.ln_f"
+        ],
+    "inp_kwargs":[
+        "attention_mask",
+        "alibi"
+    ]
+    },
+"falcon":{
+    "map_layer":{"qkv":"self_attention.query_key_value","dense":"self_attention.dense","fc1":"mlp.dense_h_to_4h","fc2":"mlp.dense_4h_to_h"}, 
+    "ratios":{"self_attention.query_key_value":3,"self_attention.dense":1,"mlp.dense_h_to_4h":0.25,"mlp.dense_4h_to_h":0.25},
+    "sequential":[
+        ["self_attention.query_key_value"],
+        ["self_attention.dense"],
+        ["mlp.dense_h_to_4h"],
+        ["mlp.dense_4h_to_h"]
+        ],
+    "layers":"model.transformer.h",
+    "prefix":"transformer.h",
+    "pre_layers":[
+        "model.transformer.word_embeddings"
+        ],
+    "post_layers":[
+        "model.transformer.ln_f"
+        ],
+    "inp_kwargs":[
+        "attention_mask",
+        "alibi"
+    ]
+    }
+}

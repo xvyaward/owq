@@ -79,7 +79,7 @@ class GPTQ_OWQ:
             ids = torch.cat([torch.arange(self.columns, device=self.dev)[temp_mask], descending_ids[:self.n_out]])
         
         self.ids = ids
-        return descending_ids[:self.n_out].to(torch.int32)
+        return torch.sort(descending_ids[:self.n_out])[0].to(torch.int32)
 
     
     def fasterquant(
@@ -136,9 +136,7 @@ class GPTQ_OWQ:
                     if (i1 + i) % groupsize == 0:
                         self.quantizer.find_params(W[:, (i1 + i):min((i1 + i + groupsize),(self.columns-self.n_out))], weight=True, num=40)
 
-                q = quantize(
-                    w.unsqueeze(1), self.quantizer.scale, self.quantizer.zero, self.quantizer.maxq
-                ).flatten()
+                q = self.quantizer.quantize(w.unsqueeze(1)).flatten()
                 Q1[:, i] = q
                 Losses1[:, i] = (w - q) ** 2 / d ** 2
 

@@ -2,9 +2,9 @@ from setuptools import setup, Extension
 from torch.utils import cpp_extension
 
 setup(
-    name='quant_cuda',
+    name='owq_cuda',
     ext_modules=[cpp_extension.CUDAExtension(
-        'quant_cuda', ['quant_cuda.cpp', 'quant_cuda_kernel.cu']
+        'owq_cuda', ['owq_cuda.cpp', 'gemv.cu', 'dequant.cu']
     )],
     cmdclass={'build_ext': cpp_extension.BuildExtension}
 )

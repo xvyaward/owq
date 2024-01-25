@@ -1,4 +1,4 @@
-torch==2.0.0
+# torch==2.0.0
 transformers
 datasets
 sacrebleu
@@ -9,3 +9,4 @@ pycountry
 rouge_score
 pytablewriter
 sentencepiece
+einops # for falcon.py
