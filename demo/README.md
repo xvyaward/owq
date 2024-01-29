@@ -26,7 +26,7 @@ python demo_2model.py lmsys/vicuna-7b-v1.3 lmsys/vicuna-33b-v1.3 --load2 {quanti
 ```
 Then you can get accessible Link to the demo page. Please enjoy!
 
-Note that **Quantized Vicuna-33B model using our OWQ method gives comparable or better chat quality, with similar memory usage comparing to FP vicuna-7B model.**
+Note that **Quantized Vicuna-33B model using our OWQ method gives comparable or better chat quality, with similar memory usage compared to the FP vicuna-7B model.**
 
 
 ### LLaMA-2 70B + OWQ 3.01 bit
@@ -40,7 +40,7 @@ python demo_llama2_70b.py meta-llama/Llama-2-70b-chat-hf --load {quantized-llama
 python demo_llama2_70b.py meta-llama/Llama-2-70b-chat-hf --load {quantized-llama-2-70b-weight-location} --gpus 0,1
 ```
 
-Please Note that we can run powerful chatbot model based on **LLaMA-2 70B** model just using **2x consumer GPUs (RTX 3090)**.
+Please note that we can run powerful chatbot model based on **LLaMA-2 70B** model just using **2x consumer GPUs (RTX 3090)**.
 
 
 

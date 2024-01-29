@@ -1,10 +1,11 @@
 import torch
 import torch.nn as nn
 import math
+from transformers.models.falcon.modeling_falcon import FalconLinear
 
 layer_list = ['q','k','v','qkv','o','out','dense','fc1','fc2','up','gate','down']
 
-def find_layers(module, layers=[nn.Conv2d, nn.Linear], name=''):
+def find_layers(module, layers=[nn.Linear, FalconLinear], name=''):
     if type(module) in layers:
         return {name: module}
     res = {}

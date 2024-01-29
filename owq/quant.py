@@ -1,6 +1,7 @@
 import numpy as np
 import torch
 import torch.nn as nn
+from transformers.models.falcon.modeling_falcon import FalconLinear
 
 try:
     import owq_cuda
@@ -200,7 +201,7 @@ def make_quant(module, n_out_infos, wbits, name=''):
     for name1, child in module.named_children():
         make_quant(child, n_out_infos, wbits, name + '.' + name1 if name != '' else name1)
 
-def lm_pack(model, quantinfos, wbits, linears=[nn.Linear]):
+def lm_pack(model, quantinfos, wbits, linears=[nn.Linear, FalconLinear]):
     from owq.utils.misc import find_layers
     layers = find_layers(model, linears)
     layers = {n: layers[n] for n in quantinfos}

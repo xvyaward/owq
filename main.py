@@ -15,7 +15,6 @@ from owq.utils.modelutils import *
 
 @torch.no_grad()
 def layerwise_quantize(model, dataloader, dev, args):
-    # assert args.no_frob_norm == True
     meta = args.meta
     print('Starting ...')
 
@@ -78,7 +77,7 @@ def layerwise_quantize(model, dataloader, dev, args):
         # r = (args.target_bit - args.wbits) * 16 / 12
         r /= n_owq_layers
 
-        layer = find_layers(layers[0], layers=[nn.Linear])
+        layer = find_layers(layers[0])
         
         for l in owq_layers:
             # for even number of n_out
@@ -92,7 +91,7 @@ def layerwise_quantize(model, dataloader, dev, args):
     quantizers = {}
     for i in range(len(layers)):
         layer = layers[i].to(dev)
-        block_layers = find_layers(layer, layers=[nn.Linear])
+        block_layers = find_layers(layer)
 
         if args.true_sequential:
             sequential = meta['sequential']
@@ -226,7 +225,7 @@ def eval_ppl(model, testenc, dev, args):
         layer = layers[i].to(dev)
         
         if args.nearest:
-            subset = find_layers(layer, layers=args.meta['linears'])
+            subset = find_layers(layer)
             for name in subset:
                 quantizer = Quantizer(args.wbits, perchannel=True, sym=args.sym, mse=False)
                 W = subset[name].weight.data
@@ -290,7 +289,7 @@ def model_multigpu(model, gpus, args):
             if inp[0].device != self.dev:
                 inp[0] = inp[0].to(self.dev)
             for key in meta['inp_kwargs']:
-                if kwargs[key].device != self.dev:
+                if kwargs[key] != None and kwargs[key].device != self.dev:
                     kwargs[key] = kwargs[key].to(self.dev)
             tmp = self.module(*inp, **kwargs)
             return tmp
@@ -495,7 +494,7 @@ if __name__ == '__main__':
     # benchmark
     if args.benchmark:
         dataloader = get_loaders(
-            args.dataset, nsamples=args.nsamples, seed=args.seed, model=args.model, seqlen=args.seqlen, train=True
+            args.dataset, nsamples=1, seed=args.seed, model=args.model, seqlen=args.seqlen, train=True
         )
         gpus = [torch.device('cuda:%d' % i) for i in range(torch.cuda.device_count())]
         if len(gpus) > 1:
@@ -514,7 +513,7 @@ if __name__ == '__main__':
     t1 = time.time()
     ppl_scores = []
     if not args.no_eval:
-        ppl_tasks = ['wikitext2','ptb-new', 'c4-new']
+        ppl_tasks = ['wikitext2','ptb', 'c4']
         for dataset in ppl_tasks:
             testloader = get_loaders(
                 dataset, seed=args.seed, model=args.model, seqlen=args.seqlen, train=False

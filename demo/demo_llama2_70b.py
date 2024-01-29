@@ -85,8 +85,6 @@ def main(args):
     multigpu = True if len(gpus_list) > 1 else False
 
     if multigpu:
-        os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
-        os.environ["CUDA_VISIBLE_DEVICES"]=args.gpus
         id1, id2 = gpus_list
         
         dev1 = torch.device(f'cuda:{id1}')

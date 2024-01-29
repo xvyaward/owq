@@ -1,16 +1,23 @@
-# OWQ: Lessons learned from activation outliers for weight quantization in large language models
+# [AAAI 2024 (Oral)] &nbsp; OWQ: Outlier-Aware Weight Quantization for Efficient Fine-Tuning and Inference of Large Language Models 
 
-This is the code for the paper [OWQ: Lessons learned from activation outliers for weight quantization in large language models](https://arxiv.org/abs/2306.02272). OWQ preserves few weak columns as FP16, while quantizing other weights to 3/4-bits. OWQ achieves substantial quality improvements with only negligible storage and computation overhead, effectively preserving the benefits of low-precision acceleration.
+<p align="center">
+  <img src="./images/owq_llama.png" width="300px" height="300px">
+</p>
+This is the code for the paper [OWQ: Outlier-Aware Weight Quantization for Efficient Fine-Tuning and Inference of Large Language Models](https://arxiv.org/abs/2306.02272). OWQ preserves few weak columns as FP16, while quantizing other weights to 3/4-bits. OWQ achieves substantial quality improvements with only negligible storage and computation overhead, effectively preserving the benefits of low-precision acceleration.
 
+<p align="center">
+  <br>
+  <img src="./images/owq_figure.png">
+</p>
 
-## Updates (2024-01-22)
+## Updates (2024-01-29)
 * Integrated all models (OPT, LLaMA, BLOOM, Falcon) into `main.py` file. You can easily add custom or open-accessible huggingface models to `model_config.json` if you want.
 * Support 4bit matrix - FP16 vector product CUDA kernel.
 * Support BFloat16.
 
 ## Features
 * Implementation of the OWQ algorithm: `owq/recon.py`, `main.py`
-* 3/4-bit weight quantization of LLMs (OPT, LLaMA1,2 families and etc..): `main.py`
+* 3/4-bit weight quantization of LLMs (OPT, LLaMA-1,2 families and etc ...): `main.py`
 * Evaluating the perplexity of quantized models: `main.py`
 * Evaluating the zero-shot accuracy of quantized models: `zeroshot.py`
 * Supports 3/4-bit packed weight save / load (~1/5, ~1/4 file size of FP16 checkpoint, respectively.)
@@ -21,7 +28,7 @@ This is the code for the paper [OWQ: Lessons learned from activation outliers fo
 * [Install](#install)
 * [Usage](#usage)
 * [Zero-shot](#zero-shot)
-* [3-bit CUDA kernel](#3-bit-cuda-kernels)
+* [3/4-bit CUDA kernels](#34-bit-cuda-kernels)
 
 ## Install
 We highly recommend to use docker image that supports CUDA. If you use anaconda instead, you need to setup CUDA for kernel use.
@@ -67,43 +74,43 @@ We have tested 3/4-bit CUDA kernel on the NVIDIA A100, A6000 and RTX3090 GPU.
 
 ### Running OWQ & measuring the perplexity (PPL)
 
-Here we use OPT-1.3b model as an example. You can replace the model argument `opt-1.3b` among `opt-125m`, `opt-350m`, `opt-2.7b`, `opt-6.7b`, `opt-13b`, `opt-66b` or other models (e.g. `meta-llama/Llama-2-7b-hf`).
+Here we use llama-7b model (huggyllama/llama-7b) as an example. You can replace the model argument `llama-7b` among `llama-13b`, `llama-30b`, and `llama-65b` or other model families (e.g. `meta-llama/Llama-2-7b-hf`, `facebook/opt-6.7b`, `lmsys/vicuna-33b-v1.3`, etc ...).
 
 * OWQ using 3.01-bit (3-bit quantization + few FP16 weight columns)
 ```
-python main.py facebook/opt-1.3b c4 --wbits 3 --target_bit 3.01
+python main.py huggyllama/llama-7b c4 --wbits 3 --target_bit 3.01
 ```
 * OWQ using 4.01-bit (4-bit quantization + few FP16 weight columns)
 ```
-python main.py facebook/opt-1.3b c4 --wbits 4 --target_bit 4.01
+python main.py huggyllama/llama-7b c4 --wbits 4 --target_bit 4.01
 ```
 
 Below are the example for the other options (FP16, RTN, GPTQ). 
 ```
 # Measuring the ppl of the full precision (FP16) model
-python main.py facebook/opt-1.3b c4 --wbits 16
+python main.py huggyllama/llama-7b c4 --wbits 16
 
 # 4-bit Round-to-Nearest (RTN) quantization
-python main.py facebook/opt-1.3b c4 --wbits 4 --nearest
+python main.py huggyllama/llama-7b c4 --wbits 4 --nearest
 
 # GPTQ with 3-bit quantization
-python main.py facebook/opt-1.3b c4 --wbits 3 --tuning minmax
+python main.py huggyllama/llama-7b c4 --wbits 3 --tuning minmax
 ```
 
 ### Zero-shot
-Here we give an example of measuring zero-shot accuracy on `lambada_openai` and `piqa` tasks using opt-125m model.
+Here we give an example of measuring zero-shot accuracy on `hellaswag` tasks using llama-7b model.
 You need to generate quantized model checkpoint before measuring the zero-shot accuracy.  
 ```
 # making checkpoint file of OWQ reconstruction
-python main.py facebook/opt-125m c4 --wbits 3 --target_bit 3.05 --no-eval --save opt-125m_3_05.pth --packing
+python main.py huggyllama/llama-7b c4 --wbits 3 --target_bit 3.01 --no-eval --save llama-7b_3_01.pth --packing
 
-# measuring zero-shot accuracy (single-gpu)
-CUDA_VISIBLE_DEVICES=0 python zeroshot.py --model hf-causal-owq --model_args pretrained=facebook/opt-125m,load=opt-125m_3_05.pth --batch_size 4 --tasks lambada_openai --no_cache
+# measuring zero-shot accuracy (using single-gpu)
+CUDA_VISIBLE_DEVICES=0 python zeroshot.py --model hf-causal-owq --model_args pretrained=huggyllama/llama-7b,load=llama-7b_3_01.pth --batch_size 4 --tasks hellaswag --no_cache
 # multi-gpu
-CUDA_VISIBLE_DEVICES=0,1 python zeroshot.py --model hf-causal-owq --model_args pretrained=facebook/opt-125m,load=opt-125m_3_05.pth,use_accelerate=True --batch_size 4 --tasks lambada_openai --no_cache
+CUDA_VISIBLE_DEVICES=0,1 python zeroshot.py --model hf-causal-owq --model_args pretrained=huggyllama/llama-7b,load=llama-7b_3_01.pth,use_accelerate=True --batch_size 4 --tasks hellaswag --no_cache
 ```
 
-### Easy OWQ + Measuring PPL, Zeroshot sample
+### Easy OPT OWQ + Measuring PPL, Zeroshot sample
 ```
 bash scripts/opt_end_to_end_evaluation.sh 0 opt-1.3b
 ```
@@ -111,7 +118,7 @@ bash scripts/opt_end_to_end_evaluation.sh 0 opt-1.3b
 ## Demo
 Please refer to the README in the `demo` directory.
 
-## 3-bit CUDA Kernels 
+## 3/4-bit CUDA Kernels 
 
 ### Benchmark kernel performance
 ```
@@ -120,9 +127,9 @@ cd owq/kernel/
 python test_kernel.py
 ```
 
-### Benchmark language generation with 3/4-bit packed model (opt, llama)
+### Benchmark language generation with 3/4-bit packed model (opt, llama, etc...)
 ```
-# Example of OPT-65b language generation (single token)
+# Example of OPT-66b language generation (single token)
 
 # Save compressed model
 python main.py facebook/opt-66b c4 --wbits 3 --target_bit 3.01 --no-eval --save opt-66b_3_01.pth --packing

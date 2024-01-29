@@ -17,9 +17,6 @@ from owq.quant import *
 def main(args):
     assert len(args.gpus.split(',')) == 2, "Two GPU devices are required. Please enter them separated by commas"
 
-    os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
-    os.environ["CUDA_VISIBLE_DEVICES"]=args.gpus
-
     global id1, id2
     id1, id2 = args.gpus.split(',')
     fmodel_name = args.fmodel.split('/')[-1].upper()

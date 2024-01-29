@@ -74,7 +74,7 @@
     },
 "falcon":{
     "map_layer":{"qkv":"self_attention.query_key_value","dense":"self_attention.dense","fc1":"mlp.dense_h_to_4h","fc2":"mlp.dense_4h_to_h"}, 
-    "ratios":{"self_attention.query_key_value":3,"self_attention.dense":1,"mlp.dense_h_to_4h":0.25,"mlp.dense_4h_to_h":0.25},
+    "ratios":{"self_attention.query_key_value":1,"self_attention.dense":1,"mlp.dense_h_to_4h":0.25,"mlp.dense_4h_to_h":0.25},
     "sequential":[
         ["self_attention.query_key_value"],
         ["self_attention.dense"],

@@ -132,8 +132,8 @@ def correctness(M=4*12288, N=12288, bits=3, outlieridx=[], faster=False):
 
 if __name__=="__main__":
     bits=3
-    for d, model in zip([4096],['opt-6.7b']): # opt
-    # for d, model in zip([12288],['opt-175b']): # opt
+    for d, model in zip([4096],['opt-6.7b']): # opt-6.7b
+    # for d, model in zip([12288],['opt-175b']): # opt-175b
         n = 6
         print(f'Benchmarking {model.upper()} matvec with outlier ...')
         for M,N in [[d,d],[d,d*4],[d*4,d]]:
