@@ -3,7 +3,7 @@ import random
 import os
 import torch
 from datasets import load_dataset
-from transformers import AutoTokenizer
+from transformers import AutoTokenizer, LlamaTokenizer
 
 def get_wikitext2(nsamples, seed, seqlen, tokenizer, train):
     if train:
@@ -89,6 +89,8 @@ def get_loaders(
     name, nsamples=128, seed=0, seqlen=2048, model='', train=True
 ):
     tokenizer = AutoTokenizer.from_pretrained(model, use_fast=False)
+    if isinstance(tokenizer, LlamaTokenizer) and 'ptb' in name:
+        tokenizer.tokens_trie.data = {}
     
     if 'wikitext2' in name:
         return get_wikitext2(nsamples, seed, seqlen, tokenizer, train)
